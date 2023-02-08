@@ -9,7 +9,7 @@ import ast
 import random
 from lxml import etree
 
-class AmazoneScraper(object):
+class AmazonScraper(object):
 
     def __init__(self, scrape_speed: int) -> None:
         self._header = [{'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.54 Safari/537.36 Edg/95.0.1020.40'},
@@ -140,7 +140,7 @@ class AmazoneScraper(object):
 if __name__ == '__main__':
     import pandas as pd
     import time
-    scraper = AmazoneScraper(2)
+    scraper = AmazonScraper(2)
     # df = pd.DataFrame(scraper.get_child_category('16225007011'))
     # scraper.get_detail_asin()
     # print(df)
@@ -149,17 +149,20 @@ if __name__ == '__main__':
     # asins = 'B08QBMD6P4'
     # # print(title)
     # # print(pd.DataFrame(scraper.best_100_seller_in_category('172504')))
-    best_seller = scraper.best_100_seller_in_category('13896617011')
+    best_seller = scraper.best_100_seller_in_category('172456')
     # # print(scraper.get_child_category('16225007011'))
     ids = best_seller['asin_id']
-    print(ids)
-    # time.sleep(2)
-    info = loop.run_until_complete(scraper.get_detail_asin(ids))
+    print(scraper._cookies)
+    print(scraper._header)
+    # print(ids)
+    # # time.sleep(2)
+    info = loop.run_until_complete(scraper.get_detail_asin(ids[:4]))
     # print(info)
-    df = pd.DataFrame(info[1:],columns=info[0])
+    # df = pd.DataFrame(info[1:],columns=info[0])
+    # print(df)
     # print(df)
     # df = pd.DataFrame(info[0])
-    df.to_csv('ct_best_seller.csv')
+    # df.to_csv('ca_best_seller.csv')
     # print(df)
     # # print(title)
     # start = time.time()
