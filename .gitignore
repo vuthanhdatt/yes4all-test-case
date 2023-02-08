@@ -1,4 +1,4 @@
-test.ipynb
+*.ipynb
 
 # virtual environnent
 .yes4all 
