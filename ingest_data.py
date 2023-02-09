@@ -75,23 +75,23 @@ def ingest_asin_info(asin_id):
 
 if __name__ == '__main__':
 
-    pass
+
 
     ##############################################################################
     ######## UNCOMMENT BELOW LINE OF CODE TO INGEST CRAWL DATA TO DATABASE #######
     ##############################################################################
 
     
-    # ingest_category('16225007011')
+    ingest_category('16225007011')
 
-    # ingest_best_seller('172456') #Computer Accessories & Peripherals
-    # ingest_best_seller('193870011') #Computer Components
-    # ingest_best_seller('1292110011') #Data Storage
+    ingest_best_seller('172456') #Computer Accessories & Peripherals
+    ingest_best_seller('193870011') #Computer Components
+    ingest_best_seller('1292110011') #Data Storage
 
-    # cap_best_item = scraper.best_100_seller_in_category('172456')['asin_id']
-    # ingest_asin_info(cap_best_item)
-    # cc_best_item = scraper.best_100_seller_in_category('193870011')['asin_id']
-    # ingest_asin_info(cc_best_item)
-    # ds_best_item = scraper.best_100_seller_in_category('1292110011')['asin_id']
-    # ingest_asin_info(ds_best_item)
+    cap_best_item = scraper.best_100_seller_in_category('172456')['asin_id']
+    ingest_asin_info(cap_best_item)
+    cc_best_item = scraper.best_100_seller_in_category('193870011')['asin_id']
+    ingest_asin_info(cc_best_item)
+    ds_best_item = scraper.best_100_seller_in_category('1292110011')['asin_id']
+    ingest_asin_info(ds_best_item)
     
