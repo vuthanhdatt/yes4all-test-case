@@ -133,7 +133,7 @@ Get data from 1 asin took 3.3957 seconds
 
 ### Database
 
-Đề bài yêu cầu xây dựng một data pipeline nên mình có tạo file `ingest_data.py` để đưa các thông tin crawl được vào database. Mình sử dụng Docker để chạy PostgreSQL database và PgAdmin để quản lý.
+Đề bài yêu cầu xây dựng một data pipeline nên mình có tạo file `ingest_data.py` để đưa các thông tin crawl được vào database. Mình sử dụng Docker để chạy PostgreSQL database và PgAdmin để quản lý. Ngoaì ra mình cũng lưu data crawl được vào folder `data` ở local.
 
 - Để set up PostgreSQL cùng Docker, đầu tiên cần tạo thư mục để mount data, giúp cho data không bị mất mỗi lần dừng docker container.
 
