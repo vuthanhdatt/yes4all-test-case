@@ -1,6 +1,18 @@
-# yes4all-test-case
+# Yes4All Test Case Solution
 
-## Vấn đề
+Table of contents
+
+* [Yes4All Test Case Solution](#Yes4All-Test-Case-Solution)
+   * [Vấn đề](#vấn-đề)
+   * [Cài đặt](#cài-đặt)
+   * [Demo](#demo)
+      * [Database](#database)
+   * [Phương pháp, quá trình thực hiện](#phương-pháp-quá-trình-thực-hiện)
+   * [Khó khăn và giải pháp](#khó-khăn-và-giải-pháp)
+
+****
+
+# Vấn đề
 
   
 
@@ -74,13 +86,14 @@ optional arguments:
                         Get detail information of given asin item
 ```
 
-Cụ thể thì mình tạo 3 arguments tương ứng với 3 yêu cầu trên. Để lấy tất cả danh sách category cấp thấp hơn category được cho. Chạy câu lệnh `python3 demo.py -gcc category_id`:
+Cụ thể thì mình tạo 3 arguments tương ứng với 3 yêu cầu đặt ra. 
+- Để lấy tất cả danh sách category cấp thấp hơn category được cho. Chạy câu lệnh `python3 demo.py -gcc category_id`:
 
 ![](https://i.imgur.com/EM7g921.png)
 
 Ở hình trên, mình lấy categories cấp thấp hơn của category có id `16225007011`, đây là category Computer mà trong đề bài yêu cầu. Ta có thể thấy Computer có 11 categories cấp thấp hơn.
 
-Để lấy danh sách sản phẩm best_seller nằm trong category, chạy câu lệnh `python3 demo.py -bsi category_id`:
+- Để lấy danh sách sản phẩm best_seller nằm trong category, chạy câu lệnh `python3 demo.py -bsi category_id`:
 
 ```
 ❯_: python3 demo.py -bsi 193870011
@@ -103,7 +116,7 @@ Cụ thể thì mình tạo 3 arguments tương ứng với 3 yêu cầu trên. 
 Ở đây mình lấy danh sách best_seller của category `193870011`, tức là category Computer Components. Có thể thay đổi category id với các id khác lấy được từ câu lệnh lấy categories cấp thấp hơn ở trên như `172456` tương ứng với Computer Accessories & Peripherals, `3011391011` tương ứng với Laptop Accessories. Lưu ý là danh sách best seller thường xuyên thay đổi nên kết quả khi chạy có thể khác với kết quả ở trên.
 
 
-Để lấy thông tin chi tiết của sản phẩm, chạy câu lệnh `python3 demo.py -dai asin_id`
+- Để lấy thông tin chi tiết của sản phẩm, chạy câu lệnh `python3 demo.py -dai asin_id`
 
 ```
 ❯_: python3 demo.py -dai B07CRG94G3 
@@ -122,14 +135,14 @@ Get data from 1 asin took 3.3957 seconds
 
 Đề bài yêu cầu xây dựng một data pipeline nên mình có tạo file `ingest_data.py` để đưa các thông tin crawl được vào database. Mình sử dụng Docker để chạy PostgreSQL database và PgAdmin để quản lý.
 
-Để set up PostgreSQL cùng Docker, đầu tiên cần tạo thư mục để mount data, giúp cho data không bị mất mỗi lần dừng docker container.
+- Để set up PostgreSQL cùng Docker, đầu tiên cần tạo thư mục để mount data, giúp cho data không bị mất mỗi lần dừng docker container.
 
 ```
 mkdir -p db/pgadmin
 sudo chown 5050:5050 db/pgadmin/
 ```
 
-Sau đó chạy `docker compose up -d` để bắt đầu. Dùng lệnh `docker ps` để xem danh sách các contianer đang chạy.
+- Sau đó chạy `docker compose up -d` để bắt đầu. Dùng lệnh `docker ps` để xem danh sách các container đang chạy.
 
 ```
 ❯_: docker ps
@@ -140,9 +153,7 @@ b55907642e38   dpage/pgadmin4   "/entrypoint.sh"         9 hours ago   Up About 
 
 Nếu kết quả xuất hiện có 2 container đang chạy, một cái sử dụng postgres image, một cái sử dụng pgadmin4 image thì đã set up thành công. Lúc này có thể chạy file `ingest_data.py` để đưa data crawl được vào PostgreSQL. Để tiết kiệm thời gian thì mình chỉ lấy 300 sản phẩm best seller của 3 categories với mục đích demo.
 
-Để truy cập vào giao diện quản lý PgAdmin, mở địa chỉ `localhost:8080/browser/` trong browser. Đăng nhập với thông tin email: `admin@admin.com`, password: `root`.
-
-Sau khi đăng nhập thành công, kết nối với PostgreSQL với thông tin
+- Để truy cập vào giao diện quản lý PgAdmin, mở địa chỉ `localhost:8080/browser/` trong browser. Đăng nhập với thông tin email: `admin@admin.com`, password: `root`. Sau khi đăng nhập thành công, kết nối với PostgreSQL với thông tin
 
 ```
 hostname: pgdatabase
@@ -163,12 +174,19 @@ Mình dùng synchronous request với package [requests](https://requests.readth
 
 Lợi ích lớn nhất của asynchronous requests theo mình thấy chính là việc kiểm soát được tốc độ lấy dữ liệu cũng như tận dụng thời gian hiệu quả hơn so với synchronous request.
 
-Sau khi request tới các địa chỉ cần crawl từ amazone, mình dùng [bs4](https://www.crummy.com/software/BeautifulSoup/bs4/doc/) để extract các thông tin cần thiết.
+Sau khi request tới các địa chỉ cần crawl từ Amazon, mình dùng [bs4](https://www.crummy.com/software/BeautifulSoup/bs4/doc/) để extract các thông tin cần thiết.
 
 Để đưa các thông tin crawl được vào database, mình biến đổi dữ liệu raw crawl được với [pandas](https://pandas.pydata.org/) về đúng format mong muốn, sau đó dùng [SQLAlchemy](https://docs.sqlalchemy.org/en/20/) để connect tới database và đưa dữ liệu đã được xử lý vào. Trong quá trình làm thì có một [bug](https://github.com/pandas-dev/pandas/issues/51015) với pandas và SQLAlchemy version 2 trở lên nên mình phải downgrade SQLAlchemy về version 1.4.46 mới fix được.
 
 ## Khó khăn và giải pháp
 
+- Giá sản phẩm: Khó khăn đầu tiên chính là lấy giá các sản phẩm do có nhiều UI cho trang sản phẩm, dẫn tới mỗi UI lại có các tag gắn với giá sản phẩm khác nhau. Mình không thể cover tất cả các trường hợp có thể xảy ra nhưng về cơ bản, logic lấy giá sản phẩm của mình như sau. Đầu tiên chia sản phẩm ra 3 dạng - availabe, not availabe in Vietnam, và unavailabe. Sau đó cover các trường hợp có thể xảy ra đối với từng dạng sản phẩm này. Đối với sản phẩm unavailabe mình sẽ để giá là N/A, vì không hiển thị giá trên trang sản phẩm chi tiết. Có một lưu ý ở đây là tuy ở trang sản phẩm chi tiết là unavailabe và không có giá cụ thể, ở trang best seller vẫn có giá của một số sản phẩm dạng này. Đây là giá offer availabe, có thể là giá của sản phẩm này nhưng là hàng cũ chẳng hạn. Do hạn chế về mặt thời gian nên mình nghĩ logic lấy giá của mình vẫn có bỏ sót nhiều edge case và không hoàn toàn chính xác 100%, tuy nhiên với logic mình đã implement, mình nghĩ đây là một logic không quá phức tạp và vẫn có thể cover hầu hết các trường hợp xảy ra.
+
+- Captcha: Amazon kiểm soát việc crawl data khá gắt gao, mình đã bị ban IP dù đã thận trọng crawl với tốc độ thấp. Hiện tại thì mình chỉ mới hạn chế việc dính captcha bằng cách giảm tốc độ request và rotate User-Agent, tuy nhiên tốc độ khoảng 200-300s cho 100 items là khá chậm, mình cũng chưa test với tốc độ lớn hơn để tìm ra tốc độ tối ưu . Tuy nhiên có một giải pháp tối ưu hơn để giải quyết vấn đề captcha là sử dụng package [amazoncaptcha](https://pypi.org/project/amazoncaptcha/) để solve captcha. Package này được cập nhật gần đây nên có vẻ sẽ hoạt động tốt. Trong tương lai nếu cần lấy thông tin của hàng trăm ngàn sản phẩm thì vấn đề cải thiện tốc độ cần được ưu tiên đầu tiên. Ngoài việc solve captcha thì còn có thể sử dựng proxy để rotate IP address từ đó tăng tốc độ crawl dữ liệu.
+
+- Exception/Logging: Khi cần lấy dữ liệu của một lượng lớn sản phẩm - hàng trăm ngàn, chắc chắn sẽ xảy ra những error không mong muốn, do đó để tracking quá trình crawl hiệu quả hơn, cần implement việc logging cũng như catching exception hiệu quả hơn. Hiện tại mình chỉ mới implement một cách cơ bản cũng như in ra terminal chứ chưa logging.
+
+- Database Optimization: Hiện tại thì mình chỉ mới biến đổi kiểu dữ liệu trước khi đưa vào database, khi truy vấn hay join bảng với hàng trăm ngàn row cần set index cũng như thiết lập constraint giữa các bảng để việc truy vấn dữ liệu tối ưu hơn.
 
 
-## Kết luận
+
